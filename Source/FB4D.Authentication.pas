@@ -122,6 +122,8 @@ type
     // Token refresh
     procedure RefreshToken(OnTokenRefresh: TOnTokenRefresh;
       OnError: TOnRequestError);
+    procedure RefreshToken2(OnTokenRefresh: TOnTokenRefresh;
+      OnError: TOnRequestError; const ARefreshToken: String);
     function CheckAndRefreshTokenSynchronous: boolean;
     // Getter methods
     function Authenticated: boolean;
@@ -924,6 +926,12 @@ end;
 
 procedure TFirebaseAuthentication.RefreshToken(OnTokenRefresh: TOnTokenRefresh;
   OnError: TOnRequestError);
+begin
+  RefreshToken2(OnTokenRefresh, OnError, fRefreshToken);
+end;
+
+procedure TFirebaseAuthentication.RefreshToken2(OnTokenRefresh: TOnTokenRefresh;
+  OnError: TOnRequestError; const ARefreshToken: String);
 var
   Data: TJSONObject;
   Params: TDictionary<string, string>;
@@ -937,7 +945,7 @@ begin
   Params := TDictionary<string, string>.Create;
   try
     Data.AddPair(TJSONPair.Create('grant_type', 'refresh_token'));
-    Data.AddPair(TJSONPair.Create('refresh_token', fRefreshToken));
+    Data.AddPair(TJSONPair.Create('refresh_token', ARefreshToken));
     Params.Add('key', ApiKey);
     Request.SendRequest([], rmPost, Data, Params, tmNoToken,
       CheckAndRefreshTokenResp, OnError);
