@@ -30,9 +30,9 @@ uses
   System.JSON, System.Generics.Collections;
 
 type
-  TOnSimpleDownloadError = procedure(const DownloadURL, ErrMsg: string) of
+  TOnSimpleDownloadError = procedure(var Stream: TStream; const DownloadURL, ErrMsg: string) of
     object;
-   TOnSimpleDownloadSuccess = procedure(const DownloadURL: string) of object;
+  TOnSimpleDownloadSuccess = procedure(var Stream: TStream; const DownloadURL: string) of object;
   TFirebaseHelpers = class
     class function CodeRFC3339DateTime(DateTimeStamp: TDateTime): string;
     class function ConvertTimeStampToUTCDateTime(TimeStamp: Int64): TDateTime;
@@ -285,7 +285,7 @@ begin
               TThread.Queue(nil,
                 procedure
                 begin
-                  OnSuccess(DownloadUrl);
+                  OnSuccess(Stream, DownloadUrl);
                 end);
           end else begin
             {$IFDEF DEBUG}
@@ -295,7 +295,7 @@ begin
               TThread.Queue(nil,
                 procedure
                 begin
-                  OnError(DownloadUrl, Response.StatusText);
+                  OnError(Stream, DownloadUrl, Response.StatusText);
                 end);
           end;
         except
@@ -304,7 +304,7 @@ begin
               TThread.Queue(nil,
                 procedure
                 begin
-                  OnError(DownloadUrl, e.Message);
+                  OnError(Stream, DownloadUrl, e.Message);
                 end)
             else
               TFirebaseHelpers.Log(
