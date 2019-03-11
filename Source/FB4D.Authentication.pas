@@ -173,6 +173,7 @@ type
     function RefreshToken: string;
     function ClaimFieldNames: TStrings;
     function ClaimField(const FieldName: string): TJSONValue;
+    function JSONResp: TJSONObject;
   end;
 
 implementation
@@ -1240,6 +1241,11 @@ end;
 function TFirebaseUser.IsPhotoURLAvailable: boolean;
 begin
   result := fJSONResp.GetValue('photoUrl') <> nil;
+end;
+
+function TFirebaseUser.JSONResp: TJSONObject;
+begin
+  Result := fJSONResp;
 end;
 
 function TFirebaseUser.PhotoURL: string;

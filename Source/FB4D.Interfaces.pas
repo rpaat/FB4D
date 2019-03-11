@@ -286,6 +286,7 @@ type
     function RefreshToken: string;
     function ClaimFieldNames: TStrings;
     function ClaimField(const FieldName: string): TJSONValue;
+    function JSONResp: TJSONObject;
   end;
   TFirebaseUserList = TList<IFirebaseUser>;
 
